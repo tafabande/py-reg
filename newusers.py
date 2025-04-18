@@ -5,12 +5,11 @@ from datetime import datetime
 
 def read():
     try:
-        df = pd.read_excel("names.xlsx")
         return pd.read_excel("names.xlsx")
     except FileNotFoundError:
         return pd.DataFrame(Columns=["Name","surname","Age","Points","color","Gender"])
 
-def write(df):
+def write(df,filename="names.xlsx"):
         df.to_excel("names.xlsx", index = False)
         print("new information added")
 
@@ -64,6 +63,7 @@ def main():
         newid= idgen(exists)
         new = info(newid)
         df = pd.concat([df, pd.DataFrame([new])], ignore_index=True)
+        write(df)
 
 if __name__ == "__main__":
     main()
