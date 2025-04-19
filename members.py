@@ -130,15 +130,25 @@ def MaT():
         print("No one attended.")
         sys.exit()
 
-    unreg = 0
+    unreg = []
     for i in range(num):
 
         name1 = input("Please enter the name: ")
         surname1 = input("Please enter the Surname: ")
-        if not nmc(df,name1,surname1):
-            unreg += 1
-        write(df, file_path)
-        print(f"There are {unreg} unregistered attendees.\nPlease register them.")
+        if not nmc(df, name1, surname1):
+            response = input(f"Do you want to register {name1} {surname1}? (y/n): ").strip().lower()
+            if response == 'y':
+                mad()  # Register them
+            else:
+                unreg.append({"Name": name1, "Surname": surname1})
+
+        if unreg:
+            print(f"There are {len(unreg)} unregistered attendees.")
+            unreg_df = pd.DataFrame(unreg)
+            with pd.ExcelWriter(file_path, mode="a", if_sheet_exists="replace") as writer:
+                unreg_df.to_excel(writer, sheet_name="unreg", index=False)
+            print("Unregistered attendees saved to 'unreg' sheet.")
+
 
 def main():
     print("hie")
